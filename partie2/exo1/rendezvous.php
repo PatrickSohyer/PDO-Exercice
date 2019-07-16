@@ -1,14 +1,14 @@
 <?php
-setlocale(LC_TIME, 'fr_FR.UTF8');
+setlocale(LC_ALL, 'fr_FR.UTF8');
 if (isset($_GET['id'])) {
     $bdd = new PDO('mysql:host=localhost;dbname=hospitale2n;charset=utf8', 'root', '');
     $id = $_GET['id'];
-    $req = $bdd->prepare('SELECT * FROM appointments INNER JOIN patients ON appointments.idPatients = patients.id WHERE appointments.id = :id');
+    $req = $bdd->prepare('SELECT * FROM appointments INNER JOIN patients ON appointments.idPatients = patients.id WHERE patients.id = :id');
     $req->bindValue(':id', $id);
     $req->execute();
     $reqFetch = $req->fetchAll();
     if (count($_POST) > 0) {
-        $reqmodify = $bdd->prepare('UPDATE appointments SET dateHour = :newdateHour WHERE id = :id');
+        $reqmodify = $bdd->prepare('UPDATE appointments SET dateHour = :newdateHour WHERE idPatients = :id');
         $reqmodify->bindValue(':newdateHour', $_POST['newdateHour']);
         $reqmodify->bindValue(':id', $id);
         if ($reqmodify->execute()) {

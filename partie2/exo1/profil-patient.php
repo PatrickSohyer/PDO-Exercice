@@ -1,8 +1,9 @@
 <?php
+setlocale(LC_ALL, 'fr_FR.UTF8');
 if (isset($_GET['id'])) {
     $bdd = new PDO('mysql:host=localhost;dbname=hospitale2n;charset=utf8', 'root', '');
     $id = $_GET['id'];
-    $req = $bdd->prepare('SELECT * FROM appointments INNER JOIN patients ON appointments.idPatients = patients.id WHERE appointments.id = :id');
+    $req = $bdd->prepare('SELECT * FROM patients LEFT JOIN appointments ON patients.id = appointments.idPatients WHERE patients.id = :id');
     $req->bindValue(':id', $id);
     $req->execute();
     $reqFetch = $req->fetchAll();
@@ -68,40 +69,45 @@ if (isset($_GET['id'])) {
                             </div>
                             <ul class="list-group list-group-flush">
                                 <form method="POST" action="profil-patient.php?id=<?= $id ?>">
-                                <li class="list-group-item infoPatients">Nom : <?= $value['lastname'] ?></li>
-                                <label class="modifyInfoPatients list-group-item" for="newlastname">Nom : </label><input class="modifyInfoPatients" type="text" name="newlastname" value="<?= $value['lastname'] ?>" id="newlastname" />
-                                <li class="list-group-item infoPatients">Prénom : <?= $value['firstname'] ?></li>
-                                <label class="modifyInfoPatients list-group-item" for="newfirstname">Prénom : </label><input class="modifyInfoPatients" type="text" name="newfirstname" value="<?= $value['firstname'] ?>" id="newfirstname" />
-                                <li class="list-group-item infoPatients">Date de naissance : <?= $value['birthdate'] ?></li>
-                                <label class="modifyInfoPatients list-group-item" for="newbirthdate">Date de naissance : </label><input class="modifyInfoPatients" type="text" name="newbirthdate" value="<?= $value['birthdate'] ?>" id="newbirthdate" />
-                                <li class="list-group-item infoPatients">Adresse Mail : <?= $value['mail'] ?></li>
-                                <label class="modifyInfoPatients list-group-item" for="newmail">Adresse Mail</label><input class="modifyInfoPatients" type="email" name="newmail" value="<?= $value['mail'] ?>" id="newmail" />
-                                <li class="list-group-item infoPatients">Numéro de Téléphone : <?= $value['phone'] ?></li>
-                                <label class="modifyInfoPatients list-group-item" for="newphone">Numéro de Téléphone</label><input class="modifyInfoPatients" type="tel" name="newphone" value="<?= $value['phone'] ?>" id="newphone" />
-                                
-                                  <li class="list-group-item infoPatients">Rendez vous : <?= strftime('%d %B %Y à %Hh%M', strtotime($value['dateHour'])) ?></li>
-                                <div class="text-center">
-                                <button type="submit" class="btn btn-success buttonSendModify">Envoyer Modifications</button>
-                                </div>
+                                    <li class="list-group-item infoPatients">Nom : <?= $value['lastname'] ?></li>
+                                    <label class="modifyInfoPatients list-group-item" for="newlastname">Nom : </label><input class="modifyInfoPatients" type="text" name="newlastname" value="<?= $value['lastname'] ?>" id="newlastname" />
+                                    <li class="list-group-item infoPatients">Prénom : <?= $value['firstname'] ?></li>
+                                    <label class="modifyInfoPatients list-group-item" for="newfirstname">Prénom : </label><input class="modifyInfoPatients" type="text" name="newfirstname" value="<?= $value['firstname'] ?>" id="newfirstname" />
+                                    <li class="list-group-item infoPatients">Date de naissance : <?= $value['birthdate'] ?></li>
+                                    <label class="modifyInfoPatients list-group-item" for="newbirthdate">Date de naissance : </label><input class="modifyInfoPatients" type="text" name="newbirthdate" value="<?= $value['birthdate'] ?>" id="newbirthdate" />
+                                    <li class="list-group-item infoPatients">Adresse Mail : <?= $value['mail'] ?></li>
+                                    <label class="modifyInfoPatients list-group-item" for="newmail">Adresse Mail</label><input class="modifyInfoPatients" type="email" name="newmail" value="<?= $value['mail'] ?>" id="newmail" />
+                                    <li class="list-group-item infoPatients">Numéro de Téléphone : <?= $value['phone'] ?></li>
+                                    <label class="modifyInfoPatients list-group-item" for="newphone">Numéro de Téléphone</label><input class="modifyInfoPatients" type="tel" name="newphone" value="<?= $value['phone'] ?>" id="newphone" />
+                                    <?php if ($value['dateHour'] == TRUE) { ?>
+                                        <li class="list-group-item infoPatients">Rendez vous : <?= strftime('%d %B %Y à %Hh%M', strtotime($value['dateHour'])) ?></li>
+                                    <?php
+                                    } else {
+                                        echo ' ';
+                                    }
+                                    ?>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success buttonSendModify">Envoyer Modifications</button>
+                                    </div>
                                 </form>
                             </ul>
                         </div>
                         <div class="text-center">
-                        <button type="button" class="btn btn-danger mt-2 buttonModify">Modifier</button>
+                            <button type="button" class="btn btn-danger mt-2 buttonModify">Modifier</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-        <?php
+            <?php
+        }
     }
-}
-?>
+    ?>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
 </body>
 </html>
